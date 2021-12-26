@@ -70,11 +70,10 @@ class MiddlewareTest(unittest.TestCase):
         self.override_settings[
             'DJANGO_CPROFILE_MIDDLEWARE_REQUIRE_STAFF'] = True
         with test.override_settings(**self.override_settings):
-            with self.assertRaises(AttributeError):
-                self.middleware.process_view(
-                    self.request, self.view.get, (self.request,), {})
-                self.middleware.process_response(
-                    self.request, self.default_response)
+            self.middleware.process_view(
+                self.request, self.view.get, (self.request,), {})
+            self.middleware.process_response(
+                self.request, self.default_response)
 
     def test_staff_setting_non_staff_user(self):
         self.override_settings[

@@ -45,7 +45,11 @@ class ProfilerMiddleware(MiddlewareMixin):
         requires_staff = getattr(
             settings, "DJANGO_CPROFILE_MIDDLEWARE_REQUIRE_STAFF", True)
 
-        if requires_staff and not (request.user and request.user.is_staff):
+        try:
+            if requires_staff and not (request.user and request.user.is_staff):
+                return False
+        except AttributeError:
+            # Sometimes a request doesn't have a user attribute
             return False
 
         return settings.DEBUG and 'prof' in request.GET
