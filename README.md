@@ -57,6 +57,17 @@ all the options you can pass, see the
 viewers, e.g. [SnakeViz](https://github.com/jiffyclub/snakeviz/) or
 [RunSnakeRun](http://www.vrplumber.com/programming/runsnakerun/)
 
+## Testing
+
+To run unit tests it is necessary to have django available. You can do `python
+-m pip install django==1.11` for example, to test with a specific version of
+it. Ideally a virtual env or similar should be setup.
+
+With django setup, the tests can be run with
+```
+python -m unittest
+```
+
 # LICENSE
 
 The code is released under MIT license. See [LICENSE](LICENSE.txt) for more
