@@ -41,11 +41,13 @@ class ProfilerMiddleware(MiddlewareMixin):
     This is adapted from an example found here:
     http://www.slideshare.net/zeeg/django-con-high-performance-django-presentation.
     """
-    PROFILER_REQUEST_ATTR_NAME = '_django_cprofile_middleware_profiler'
+
+    PROFILER_REQUEST_ATTR_NAME = "_django_cprofile_middleware_profiler"
 
     def can(self, request):
         requires_staff = getattr(
-            settings, "DJANGO_CPROFILE_MIDDLEWARE_REQUIRE_STAFF", True)
+            settings, "DJANGO_CPROFILE_MIDDLEWARE_REQUIRE_STAFF", True
+        )
 
         try:
             if requires_staff and not (request.user and request.user.is_staff):
@@ -54,7 +56,7 @@ class ProfilerMiddleware(MiddlewareMixin):
             # Sometimes a request doesn't have a user attribute
             return False
 
-        return settings.DEBUG and 'prof' in request.GET
+        return settings.DEBUG and "prof" in request.GET
 
     def process_view(self, request, callback, callback_args, callback_kwargs):
         if self.can(request):
@@ -62,8 +64,7 @@ class ProfilerMiddleware(MiddlewareMixin):
             setattr(request, self.PROFILER_REQUEST_ATTR_NAME, profiler)
             args = (request,) + callback_args
             try:
-                return profiler.runcall(
-                    callback, *args, **callback_kwargs)
+                return profiler.runcall(callback, *args, **callback_kwargs)
             except Exception:
                 # we want the process_exception middleware to fire
                 # https://code.djangoproject.com/ticket/12250
@@ -73,21 +74,19 @@ class ProfilerMiddleware(MiddlewareMixin):
         if hasattr(request, self.PROFILER_REQUEST_ATTR_NAME):
             profiler = getattr(request, self.PROFILER_REQUEST_ATTR_NAME)
             profiler.create_stats()
-            if 'download' in request.GET:
+            if "download" in request.GET:
                 import marshal
 
                 output = marshal.dumps(profiler.stats)
-                response = HttpResponse(
-                    output, content_type='application/octet-stream')
-                response['Content-Disposition'] = 'attachment;' \
-                                                  ' filename=view.prof'
-                response['Content-Length'] = len(output)
+                response = HttpResponse(output, content_type="application/octet-stream")
+                response["Content-Disposition"] = "attachment;" " filename=view.prof"
+                response["Content-Length"] = len(output)
             else:
                 io = StringIO()
                 stats = pstats.Stats(profiler, stream=io)
 
-                stats.strip_dirs().sort_stats(request.GET.get('sort', 'time'))
-                stats.print_stats(int(request.GET.get('count', 100)))
+                stats.strip_dirs().sort_stats(request.GET.get("sort", "time"))
+                stats.print_stats(int(request.GET.get("count", 100)))
 
-                response = HttpResponse('<pre>%s</pre>' % io.getvalue())
+                response = HttpResponse("<pre>%s</pre>" % io.getvalue())
         return response

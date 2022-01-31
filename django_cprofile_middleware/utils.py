@@ -4,4 +4,5 @@
 
 class MiddlewareMixin(object):
     """A dummy class to support older version of django."""
+
     pass
