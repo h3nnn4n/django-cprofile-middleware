@@ -18,5 +18,8 @@ jobs:
           python-version: ${{ matrix.python-version }}
           architecture: x64
 
+      - name: Setup deps
+        run: python -m pip install django
+
       - name: Run tests
         run: python -m unittest
