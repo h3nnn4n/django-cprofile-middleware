@@ -12,10 +12,10 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ['2.x', '3.7', '3.8', '3.9', '3.10', '3.x']
+        python-version: ['2.x', '3.7', '3.x']
         django-version: ['1.11.29', '3.2.12']
 
-    name: Python ${{ matrix.python-version }} sample
+    name: Python ${{ matrix.python-version }} / django ${{ matrix.django-version}}
     steps:
       - uses: actions/checkout@v2
       - name: Set up Python
